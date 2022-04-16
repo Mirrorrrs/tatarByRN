@@ -3,18 +3,11 @@ import {StyleSheet, View, Text, ScrollView} from "react-native";
 import ContentContainer from "../content_container/ContentContainer";
 import MapView, {Marker} from "react-native-maps";
 import CustomButton from "../custom_button/CustomButton";
-import {useAnimatedStyle, useSharedValue} from "react-native-reanimated";
 
 const BottomSlideUp = ({navigation}) => {
-    const bottomPosition = useSharedValue(-100)
 
-    const animatedStyles = useAnimatedStyle(()=>{
-        return {
-            bottom: bottomPosition.value
-        }
-    })
     return (
-            <View style={[styles.slideUpBody,animatedStyles]} >
+            <View style={[styles.slideUpBody]} >
                 <ScrollView style={styles.slideUpContent}>
                             <ContentContainer>
                                 <Text style={styles.slideUpTitle}>Улица Баумана</Text>
@@ -98,6 +91,7 @@ const styles = StyleSheet.create({
         position:"absolute",
         paddingTop:18,
         zIndex:1000,
+        bottom:0,
         backgroundColor:'white',
     },
 
