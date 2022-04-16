@@ -4,6 +4,7 @@ import ContentView from "../../components/content_view/ContentView";
 import BottomNavigation from "../../components/bottom_navigation/BottomNavigation";
 import MapView, {Marker} from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
+import BottomSlideUp from "../../components/bottom_slideup/BottomSlideUp";
 
 const MapScreen = ({navigation}) => {
     return <ContentView>
@@ -41,7 +42,7 @@ const MapScreen = ({navigation}) => {
             </MapView>
         </View>
         <BottomNavigation navigation={navigation}/>
-
+        <BottomSlideUp/>
     </ContentView>;
 };
 
