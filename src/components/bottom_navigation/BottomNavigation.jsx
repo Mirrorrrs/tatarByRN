@@ -6,9 +6,11 @@ import Inventory from "../../assets/icons/Inventory";
 import Profile from "../../assets/icons/Profile";
 import ContentContainer from "../content_container/ContentContainer";
 import {useRoute} from "@react-navigation/native";
+import {useSelector} from "react-redux";
 
 const BottomNavigation = ({navigation}) => {
     const routeName = useRoute().name
+    const token =useSelector(state=>state.user.token)
     return (
         <ContentContainer style={styles.bottomNavigationBody}>
             <TouchableOpacity style={styles.menuInner} onPress={()=>navigation.navigate("home")}>
@@ -23,9 +25,9 @@ const BottomNavigation = ({navigation}) => {
                 <Inventory/>
                 <Text style={styles.innerText}>Инвентарь</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuInner}>
-                <Profile/>
-                <Text style={styles.innerText}>Профиль</Text>
+            <TouchableOpacity style={styles.menuInner} onPress={()=>{token===null?navigation.navigate("auth"):navigation.navigate("profile")}}>
+                <Profile fill={routeName==="profile" ? "#00C48C" : "#858585"}/>
+                <Text style={[styles.innerText,routeName==="profile" && styles.innerTextActive]}>Профиль</Text>
             </TouchableOpacity>
 
         </ContentContainer>

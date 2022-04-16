@@ -1,16 +1,40 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import ContentView from "../../components/content_view/ContentView";
 import {StyleSheet, View, Text, TouchableOpacity} from "react-native";
 import Logo from "../../assets/icons/Logo";
 import CustomInput from "../../components/custom_input/CustomInput";
 import CustomButton from "../../components/custom_button/CustomButton";
 import GlobalStyles from "../../styles/GlobalStyles";
+import {useDispatch} from "react-redux";
+import {authUser, registerUser} from "../../store/actions/UserActions";
 
-const AuthScreen = () => {
+const AuthScreen = ({navigation}) => {
     const [authType, setAuthType] = useState(0)
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+    const dispatch = useDispatch()
     const changeType = (type)=>{
         setAuthType(type)
     }
+    const sendData = useCallback(async()=>{
+        try{
+            if (authType===0){
+                await dispatch(registerUser({
+                    username:username,
+                    password:password
+                }))
+            }else{
+                await dispatch(authUser({
+                    username:username,
+                    password:password
+                }))
+            }
+            navigation.navigate("profile")
+        }catch (e){
+
+        }
+
+    }, [authType, username, password])
     return (
         <ContentView style={styles.authView}>
             <View style={styles.logoWrapper}>
@@ -19,11 +43,11 @@ const AuthScreen = () => {
             <View style={styles.viewForm}>
                 <Text style={styles.formTitle}>{authType===0 ? 'Регистрация' : "Авторизация"}</Text>
                 <View style={styles.formInputs}>
-                    <CustomInput style={styles.formInput} placeholder={"Логин"}/>
-                    <CustomInput style={styles.formInput} placeholder={"Пароль"}/>
+                    <CustomInput style={styles.formInput} onChangeText={(val)=>setUsername(val)} placeholder={"Логин"}/>
+                    <CustomInput style={styles.formInput} onChangeText={(val)=>setPassword(val)} placeholder={"Пароль"}/>
                 </View>
                 {authType===1 && <Text style={[GlobalStyles.textLink,{marginTop:16}]} onPress={()=>{console.log("Пошел нахуй сука")}}>Забыли пароль?</Text>}
-                <CustomButton style={styles.formButton} text={"Регистрация"}/>
+                <CustomButton style={styles.formButton} onPress={sendData} text={"Регистрация"}/>
                 {authType===0 && <Text style={styles.bottomText}>Уже есть аккаунт? <Text style={GlobalStyles.textLink} onPress={()=>{changeType(1)}}>Войти</Text></Text> }
                 {authType===1 && <Text style={styles.bottomText}>{"Еще нет аккаунта?\n"} <Text style={[GlobalStyles.textLink]} onPress={()=>{changeType(0)}}>Регистрация</Text></Text> }
 

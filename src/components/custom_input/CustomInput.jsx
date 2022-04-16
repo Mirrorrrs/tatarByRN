@@ -1,9 +1,9 @@
 import React from 'react';
 import {StyleSheet, TextInput} from "react-native"
 
-const CustomInput = ({placeholder, style}) => {
+const CustomInput = ({placeholder, style, onChangeText}) => {
     return (
-        <TextInput style={[styles.input, style]} selectionColor={'#3F3356'} placeholder={placeholder}/>
+        <TextInput style={[styles.input, style]} onChangeText={onChangeText} selectionColor={'#3F3356'} placeholder={placeholder}/>
     );
 };
 

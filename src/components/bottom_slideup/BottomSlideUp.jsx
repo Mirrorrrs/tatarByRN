@@ -1,14 +1,93 @@
-import React from 'react';
-import {StyleSheet, View, Text, ScrollView, Dimensions} from "react-native";
+import React, {useCallback, useRef, useState} from 'react';
+import {StyleSheet, View, Text, ScrollView, useWindowDimensions, Platform, StatusBar, Animated} from "react-native";
 import ContentContainer from "../content_container/ContentContainer";
 import MapView, {Marker} from "react-native-maps";
 import CustomButton from "../custom_button/CustomButton";
+import SlidingUpPanel from 'rn-sliding-up-panel';
+import {useSafeAreaInsets} from "react-native-safe-area-context";
+const ios = Platform.OS === 'ios';
 
 const BottomSlideUp = ({navigation}) => {
+    const deviceHeight = useWindowDimensions().height;
+    const insets = useSafeAreaInsets();
+    const statusBarHeight = ios ? insets.bottom : StatusBar.currentHeight;
+    const draggableRange = {
+        top: deviceHeight - statusBarHeight,
+        bottom: deviceHeight / 2.8
+    };
+
+    const snappingPoints = [
+        draggableRange.top,
+        draggableRange.bottom
+    ];
+
+    const panelRef = useRef(null);
+    const [panelPositionVal] = useState(new Animated.Value(draggableRange.bottom));
+
+    const [scrollEnabled, setScrollEnabled] = useState(false);
+    const [allowDragging, setAllowDragging] = useState(true);
+    const [atTop, setAtTop] = useState(true);
+
+    const onMomentumDragEnd = useCallback((value) => {
+        if (value === draggableRange.top && !scrollEnabled) {
+            setScrollEnabled(true);
+            setAtTop(true);
+        }
+    }, [draggableRange, scrollEnabled]);
+
+    const onMomentumScrollEnd = useCallback((event) => {
+        const { nativeEvent } = event;
+        if (nativeEvent.contentOffset.y === 0) {
+            console.log("here");
+            setAtTop(true);
+            if (ios) {
+                setAllowDragging(true);
+            }
+        }
+    }, []);
+
+    const PANEL_VELOCITY = ios ? 1 : 2.3;
+    const hideFullScreenPanelOptions = {
+        velocity: PANEL_VELOCITY,
+        toValue: draggableRange.bottom
+    };
+    const onDragStart = useCallback((_, gestureState) => {
+        if (atTop && scrollEnabled) {
+            if (gestureState.vy > 0) {
+                setScrollEnabled(false);
+                if (ios) {
+                    setAllowDragging(true);
+                }
+                if (panelRef && panelRef.current) {
+                    panelRef.current.show(hideFullScreenPanelOptions);
+                }
+            } else {
+                setAtTop(false);
+                if (ios) {
+                    setAllowDragging(false);
+                }
+            }
+        }
+    }, [atTop, scrollEnabled, panelRef]);
 
     return (
+        <SlidingUpPanel
+            ref={panelRef}
+            animatedValue={panelPositionVal}
+            draggableRange={draggableRange}
+            snappingPoints={snappingPoints}
+            backdropOpacity={0}
+            showBackdrop={false}
+            height={deviceHeight}
+            allowDragging={allowDragging}
+            onMomentumDragEnd={onMomentumDragEnd}
+            onDragStart={onDragStart}
+        >
             <View style={[styles.slideUpBody]} >
-                <ScrollView style={styles.slideUpContent}>
+                <ScrollView   scrollEnabled={scrollEnabled}
+                              showsVerticalScrollIndicator={false}
+                              bounces={false}
+                              onMomentumScrollEnd={onMomentumScrollEnd} style={styles.slideUpContent}>
                             <ContentContainer>
                                 <Text style={styles.slideUpTitle}>Улица Баумана</Text>
                                 <Text style={styles.slideUpSubtitle}>Достопримечательность</Text>
@@ -47,11 +126,11 @@ const BottomSlideUp = ({navigation}) => {
                             </View>
                         </ScrollView>
                 <ContentContainer>
-                    <CustomButton onPress={()=>navigation.navigate("ar_scene")} text={"Собрать"}/>
+                    <CustomButton style={{marginBottom: 20}} onPress={()=>navigation.navigate("ar_scene")} text={"Собрать"}/>
 
                 </ContentContainer>
             </View>
-
+        </SlidingUpPanel>
 
     );
 };
@@ -60,7 +139,7 @@ const styles = StyleSheet.create({
 
     mapContainer: {
         width: "100%",
-        height:180,
+        height:220,
 
         justifyContent: 'flex-end',
         alignItems: 'center',
@@ -89,11 +168,10 @@ const styles = StyleSheet.create({
     },
 
     slideUpBody:{
-        position:"absolute",
-        zIndex:100,
-        height:"70%",
         width:"100%",
-        paddingTop:35,
+        height:"75%",
+        position:"absolute",
+        paddingTop:18,
         bottom:0,
         backgroundColor:'white',
     },

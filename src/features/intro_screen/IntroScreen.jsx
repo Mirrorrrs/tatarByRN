@@ -7,6 +7,9 @@ import Map from "../../assets/icons/Map.png"
 import ContentView from "../../components/content_view/ContentView";
 import CustomButton from "../../components/custom_button/CustomButton";
 import GlobalStyles from "../../styles/GlobalStyles";
+import {useDispatch} from "react-redux";
+import {setFirstVisit} from "../../store/actions/UserActions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const slides = [
     {
@@ -32,15 +35,20 @@ const slides = [
     }
 ];
 
-const IntroScreen = () => {
+const IntroScreen = ({navigation}) => {
     const sliderRef = useRef()
-    console.log(sliderRef);
+    const dispatch = useDispatch()
     const renderPagination = (activeIndex)=>{
         return <View style={styles.customPaginationView}>
             <View style={[styles.customPaginationDot, activeIndex===0 && styles.customPaginationDotActive]}></View>
             <View style={[styles.customPaginationDot, activeIndex===1 && styles.customPaginationDotActive]}></View>
             <View style={[styles.customPaginationDot, activeIndex===2 && styles.customPaginationDotActive]}></View>
         </View>
+    }
+    const startApp = async () => {
+        dispatch(setFirstVisit(true))
+        AsyncStorage.setItem("firstTime", "true")
+        navigation.navigate("home")
     }
     const renderItems = useCallback(({item})=>{
         return (
@@ -49,7 +57,7 @@ const IntroScreen = () => {
                 <Text style={styles.slideTitle}>{item.title}</Text>
                 <Text style={styles.slideText}>{item.text}</Text>
                 <View style={styles.slideButtons}>
-                    <CustomButton text={"Далее"} onPress={()=>item.key!==2 && sliderRef.current.goToSlide(item.key+1)}/>
+                    <CustomButton text={"Далее"} onPress={()=>item.key!==2 ? sliderRef.current.goToSlide(item.key+1):startApp()}/>
                     <CustomButton style={{marginTop:16}} text={"Пропустить"} white={true}/>
                 </View>
             </ContentView>

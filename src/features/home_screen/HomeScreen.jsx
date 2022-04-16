@@ -4,28 +4,48 @@ import ContentContainer from "../../components/content_container/ContentContaine
 import {ScrollView, StyleSheet, Text, View} from "react-native"
 import HomePlaceCard from "../../components/home_place_card/HomePlaceCard";
 import BottomNavigation from "../../components/bottom_navigation/BottomNavigation";
+import HomeToCard from "../../components/home_to_card/HomeToCard";
 
 const HomeScreen = ({navigation}) => {
     return (
         <ContentView style={styles.homeWrapper}>
             <ScrollView style={{flex:1}}>
-                <ContentContainer style={{marginBottom:15}}>
+                <ContentContainer>
                     <Text style={styles.pageTitle}>Добро пожаловать!</Text>
                     <Text style={styles.pageSubtitle}>Город Казань</Text>
                     <View>
                         <Text style={styles.sectionTitle}>Лучшие места</Text>
                     </View>
+                </ContentContainer>
+                    <ScrollView showsVerticalScrollIndicator={false}
+                                showsHorizontalScrollIndicator={false} horizontal={true} style={styles.cardsWrapper}>
+                        <HomePlaceCard style={styles.homeCardStyle}/>
+                        <HomePlaceCard style={styles.homeCardStyle}/>
+                        <HomePlaceCard style={styles.homeCardStyle}/>
+                        <HomePlaceCard style={styles.homeCardStyle}/>
+                        <HomePlaceCard style={styles.homeCardStyle}/>
+                        <HomePlaceCard style={styles.homeCardStyle}/>
+                        <HomePlaceCard style={styles.homeCardStyle}/>
+                        <HomePlaceCard style={styles.homeCardStyle}/>
+                    </ScrollView>
+                <ContentContainer>
                     <View>
-                        <HomePlaceCard style={styles.homeCardStyle}/>
-                        <HomePlaceCard style={styles.homeCardStyle}/>
-                        <HomePlaceCard style={styles.homeCardStyle}/>
-                        <HomePlaceCard style={styles.homeCardStyle}/>
-                        <HomePlaceCard style={styles.homeCardStyle}/>
-                        <HomePlaceCard style={styles.homeCardStyle}/>
-                        <HomePlaceCard style={styles.homeCardStyle}/>
-                        <HomePlaceCard style={styles.homeCardStyle}/>
+                        <Text style={styles.sectionTitle}>Куда сходить</Text>
                     </View>
                 </ContentContainer>
+                <ScrollView showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false} horizontal={true} style={styles.cardsWrapper}>
+                    <HomeToCard style={styles.homeToCardStyle}/>
+                    <HomeToCard style={styles.homeToCardStyle}/>
+                    <HomeToCard style={styles.homeToCardStyle}/>
+                    <HomeToCard style={styles.homeToCardStyle}/>
+                    <HomeToCard style={styles.homeToCardStyle}/>
+                    <HomeToCard style={styles.homeToCardStyle}/>
+                    <HomeToCard style={styles.homeToCardStyle}/>
+                    <HomeToCard style={styles.homeToCardStyle}/>
+
+                </ScrollView>
+
             </ScrollView>
             <BottomNavigation navigation={navigation}/>
         </ContentView>
@@ -37,8 +57,21 @@ const styles = StyleSheet.create({
         backgroundColor:"white"
     },
 
-    homeCardStyle:{
+    cardsWrapper:{
+      marginLeft: -10,
+        left:16,
         marginTop:16
+    },
+
+    homeToCardStyle:{
+        marginTop:16,
+        marginLeft:10
+    },
+
+    homeCardStyle:{
+        marginTop:16,
+        width:280,
+        marginLeft:10
     },
 
     pageTitle:{
@@ -59,7 +92,7 @@ const styles = StyleSheet.create({
         color:"#1A051D",
         fontFamily:"SFProDisplay-Medium",
         fontSize:18,
-        marginTop:30
+        marginTop:30,
     }
 })
 
