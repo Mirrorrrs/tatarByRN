@@ -8,7 +8,9 @@
 module.exports = {
   resolver: {
     /* resolver options */
-    sourceExts: ['jsx','js', 'tsx', 'ts'] //add here
+    sourceExts: ['jsx','js', 'tsx', 'ts', 'obj'], //add here
+    assetExts: [ "obj", "mtl", "JPG", "vrx", "hdr", "gltf", "glb", "bin", "arobject", "gif", "png", "mtl",'jpg']
+
   },
   transformer: {
     getTransformOptions: async () => ({

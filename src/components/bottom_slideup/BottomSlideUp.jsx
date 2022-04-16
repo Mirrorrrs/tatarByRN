@@ -4,7 +4,7 @@ import ContentContainer from "../content_container/ContentContainer";
 import MapView, {Marker} from "react-native-maps";
 import CustomButton from "../custom_button/CustomButton";
 
-const BottomSlideUp = () => {
+const BottomSlideUp = ({navigation}) => {
 
     return (
             <View style={[styles.slideUpBody]} >
@@ -47,7 +47,7 @@ const BottomSlideUp = () => {
                             </View>
                         </ScrollView>
                 <ContentContainer>
-                    <CustomButton text={"Собрать"}/>
+                    <CustomButton onPress={()=>navigation.navigate("ar_scene")} text={"Собрать"}/>
 
                 </ContentContainer>
             </View>

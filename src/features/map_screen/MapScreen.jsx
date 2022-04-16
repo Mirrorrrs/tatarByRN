@@ -42,7 +42,7 @@ const MapScreen = ({navigation}) => {
             </MapView>
         </View>
         <BottomNavigation navigation={navigation}/>
-        <BottomSlideUp/>
+        <BottomSlideUp navigation={navigation}/>
     </ContentView>;
 };
 
