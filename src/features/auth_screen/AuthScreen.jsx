@@ -5,13 +5,16 @@ import Logo from "../../assets/icons/Logo";
 import CustomInput from "../../components/custom_input/CustomInput";
 import CustomButton from "../../components/custom_button/CustomButton";
 import GlobalStyles from "../../styles/GlobalStyles";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {Alert} from "react-native"
 import {authUser, registerUser} from "../../store/actions/UserActions";
 
 const AuthScreen = ({navigation}) => {
     const [authType, setAuthType] = useState(0)
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const token = useSelector(state=>state.user.token)
+    console.log(token);
     const dispatch = useDispatch()
     const changeType = (type)=>{
         setAuthType(type)
@@ -31,7 +34,7 @@ const AuthScreen = ({navigation}) => {
             }
             navigation.navigate("profile")
         }catch (e){
-
+            Alert.alert("Проверьте правильность данных")
         }
 
     }, [authType, username, password])
@@ -47,7 +50,7 @@ const AuthScreen = ({navigation}) => {
                     <CustomInput style={styles.formInput} onChangeText={(val)=>setPassword(val)} placeholder={"Пароль"}/>
                 </View>
                 {authType===1 && <Text style={[GlobalStyles.textLink,{marginTop:16}]} onPress={()=>{console.log("Пошел нахуй сука")}}>Забыли пароль?</Text>}
-                <CustomButton style={styles.formButton} onPress={sendData} text={"Регистрация"}/>
+                <CustomButton style={styles.formButton} onPress={sendData} text={authType===0 ? "Зарегистрироваться" : "Войти"}/>
                 {authType===0 && <Text style={styles.bottomText}>Уже есть аккаунт? <Text style={GlobalStyles.textLink} onPress={()=>{changeType(1)}}>Войти</Text></Text> }
                 {authType===1 && <Text style={styles.bottomText}>{"Еще нет аккаунта?\n"} <Text style={[GlobalStyles.textLink]} onPress={()=>{changeType(0)}}>Регистрация</Text></Text> }
 

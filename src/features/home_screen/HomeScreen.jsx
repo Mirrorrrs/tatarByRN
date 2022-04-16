@@ -1,12 +1,30 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import ContentView from "../../components/content_view/ContentView";
 import ContentContainer from "../../components/content_container/ContentContainer";
 import {ScrollView, StyleSheet, Text, View} from "react-native"
 import HomePlaceCard from "../../components/home_place_card/HomePlaceCard";
 import BottomNavigation from "../../components/bottom_navigation/BottomNavigation";
 import HomeToCard from "../../components/home_to_card/HomeToCard";
+import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
 
 const HomeScreen = ({navigation}) => {
+    const left = useSharedValue(90)
+    const placesStyle = useAnimatedStyle(()=>{
+        return {
+            marginLeft:withTiming(left.value,{duration:600})
+        }
+    },[])
+
+    const walkStyle = useAnimatedStyle(()=>{
+        return {
+            marginLeft:withTiming(left.value,{duration:800})
+        }
+    },[])
+
+    useEffect(()=>{
+        left.value=-10
+    },[])
+
     return (
         <ContentView style={styles.homeWrapper}>
             <ScrollView style={{flex:1}}>
@@ -17,8 +35,8 @@ const HomeScreen = ({navigation}) => {
                         <Text style={styles.sectionTitle}>Лучшие места</Text>
                     </View>
                 </ContentContainer>
-                    <ScrollView showsVerticalScrollIndicator={false}
-                                showsHorizontalScrollIndicator={false} horizontal={true} style={styles.cardsWrapper}>
+                    <Animated.ScrollView showsVerticalScrollIndicator={false}
+                                showsHorizontalScrollIndicator={false} horizontal={true} style={[styles.cardsWrapper,placesStyle]}>
                         <HomePlaceCard style={styles.homeCardStyle}/>
                         <HomePlaceCard style={styles.homeCardStyle}/>
                         <HomePlaceCard style={styles.homeCardStyle}/>
@@ -27,14 +45,14 @@ const HomeScreen = ({navigation}) => {
                         <HomePlaceCard style={styles.homeCardStyle}/>
                         <HomePlaceCard style={styles.homeCardStyle}/>
                         <HomePlaceCard style={styles.homeCardStyle}/>
-                    </ScrollView>
+                    </Animated.ScrollView>
                 <ContentContainer>
                     <View>
                         <Text style={styles.sectionTitle}>Куда сходить</Text>
                     </View>
                 </ContentContainer>
-                <ScrollView showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false} horizontal={true} style={styles.cardsWrapper}>
+                <Animated.ScrollView showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false} horizontal={true} style={[styles.cardsWrapper,walkStyle]}>
                     <HomeToCard style={styles.homeToCardStyle}/>
                     <HomeToCard style={styles.homeToCardStyle}/>
                     <HomeToCard style={styles.homeToCardStyle}/>
@@ -44,7 +62,7 @@ const HomeScreen = ({navigation}) => {
                     <HomeToCard style={styles.homeToCardStyle}/>
                     <HomeToCard style={styles.homeToCardStyle}/>
 
-                </ScrollView>
+                </Animated.ScrollView>
 
             </ScrollView>
             <BottomNavigation navigation={navigation}/>
@@ -58,7 +76,6 @@ const styles = StyleSheet.create({
     },
 
     cardsWrapper:{
-      marginLeft: -10,
         left:16,
         marginTop:16
     },

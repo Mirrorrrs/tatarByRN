@@ -1,11 +1,26 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from "react-native";
+import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
 
 const RewardCard = ({image, style}) => {
+    const scale = useSharedValue(1.5)
+    const borderRadius = useSharedValue(14)
+
+    const animatedStyle = useAnimatedStyle(()=>{
+        return {
+            borderRadius:borderRadius.value,
+            transform:[{scale:scale.value}]
+        }
+    },[])
+
+    useEffect(()=>{
+        borderRadius.value = withTiming(16,{duration:600})
+        scale.value = withSpring(1)
+    },[])
     return (
-        <TouchableOpacity style={[styles.cardBody, style]}>
+        <Animated.View style={[styles.cardBody, style, animatedStyle]}>
             <Image source={image}/>
-        </TouchableOpacity>
+        </Animated.View>
     );
 };
 
@@ -13,7 +28,6 @@ const styles = StyleSheet.create({
     cardBody:{
         height:195,
         backgroundColor:"rgba(229,229,229,0.24)",
-        borderRadius:16,
         justifyContent:"center",
         alignItems:"center"
     }

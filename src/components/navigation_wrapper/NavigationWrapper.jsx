@@ -7,10 +7,11 @@ import Auth from "../../screens/Auth";
 import Home from "../../screens/Home";
 import Map from "../../screens/Map";
 import ArScene from "../../screens/ArScene";
-import {setFirstVisit} from "../../store/actions/UserActions";
+import {setFirstVisit, setToken, setUserRegion} from "../../store/actions/UserActions";
 import {useDispatch, useSelector} from "react-redux";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from "../../screens/Profile";
+import Geolocation from "@react-native-community/geolocation";
 
 const config = {
     animation:"timing",
@@ -26,19 +27,26 @@ const NavigationWrapper = () => {
     const firstTime = useSelector(state => state.user.firstVisit)
     const checkData = async ()=>{
         const firstVisit = await AsyncStorage.getItem("firstTime")
+        const authToken = await AsyncStorage.getItem("token")
         if (firstVisit!="true"){
             dispatch(setFirstVisit(false))
         }else{
             dispatch(setFirstVisit(true))
         }
+        if (authToken){
+            dispatch(setToken(authToken))
+        }
+        Geolocation.getCurrentPosition(pos=>{
+            dispatch(setUserRegion(pos.coords))
+        })
     }
     useEffect( ()=>{
         checkData()
     },[checkData])
-    // initialRouteName={!firstTime ? 'intro' : 'home'}
+
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={"profile"} screenOptions={{headerShown: false, transitionSpec:{
+            <Stack.Navigator initialRouteName={!firstTime ? 'intro' : 'home'} screenOptions={{headerShown: false, transitionSpec:{
                 open:config,
                     close:config
                 }}} >

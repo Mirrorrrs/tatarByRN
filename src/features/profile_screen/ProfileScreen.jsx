@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ContentView from "../../components/content_view/ContentView";
 import {Dimensions, Image, ScrollView, StyleSheet, Text, View} from "react-native";
 import BottomNavigation from "../../components/bottom_navigation/BottomNavigation";
@@ -6,10 +6,18 @@ import ContentContainer from "../../components/content_container/ContentContaine
 import CustomButton from "../../components/custom_button/CustomButton";
 import Avatar from "../../assets/images/Avatar.png"
 import RewardCard from "../../components/reward_card/RewardCard";
+import {useDispatch} from "react-redux";
+import {getUser} from "../../store/actions/UserActions";
 
 const width = Dimensions.get("window").width-20
 
 const ProfileScreen = ({navigation}) => {
+    const dispatch = useDispatch()
+    const [test,setTest] = useState(6)
+    const fetch = async()=>{
+        await dispatch(getUser())
+    }
+    useEffect(fetch,[fetch])
     return (
         <ContentView style={styles.profileWrapper}>
             <ScrollView>

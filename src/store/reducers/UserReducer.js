@@ -1,10 +1,11 @@
-import {SET_FIRST_VISIT, SET_LOGIN, SET_TOKEN} from "../consts";
+import {SET_FIRST_VISIT, SET_LOGIN, SET_TOKEN, SET_USER_REGION} from "../consts";
 
 
 const initialState = {
     login:"",
     token:null,
-    firstVisit:true
+    firstVisit:true,
+    userRegion:{}
 }
 
 export const UserReducer = (state = initialState, action)=>{
@@ -24,6 +25,11 @@ export const UserReducer = (state = initialState, action)=>{
             return {
                 ...state,
                 firstVisit: action.payload
+            }
+        case SET_USER_REGION:
+            return {
+                ...state,
+                userRegion: action.payload
             }
 
         default: return state

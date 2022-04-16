@@ -1,17 +1,39 @@
-import React from 'react';
-import {StyleSheet, View, Text, ScrollView} from "react-native";
+import React, {useEffect} from 'react';
+import {StyleSheet, View, Text, ScrollView, Dimensions} from "react-native";
 import ContentContainer from "../content_container/ContentContainer";
 import MapView, {Marker} from "react-native-maps";
 import CustomButton from "../custom_button/CustomButton";
+import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
+import {CloseButton} from "../circled_button/CircledButton";
 
-const BottomSlideUp = ({navigation}) => {
+const height = -Math.floor(Dimensions.get("window").height)
 
+
+const BottomSlideUp = ({navigation, opened, close}) => {
+    const bottomPosition = useSharedValue(height)
+
+    const animatedStyles = useAnimatedStyle(()=>{
+        return {
+            bottom: withTiming(bottomPosition.value)
+        }
+    },[])
+
+    useEffect(()=>{
+        opened ? bottomPosition.value = 0 : bottomPosition.value = height
+    },[opened])
     return (
-            <View style={[styles.slideUpBody]} >
+            <Animated.View style={[styles.slideUpBody,animatedStyles]} >
                 <ScrollView style={styles.slideUpContent}>
                             <ContentContainer>
-                                <Text style={styles.slideUpTitle}>Улица Баумана</Text>
-                                <Text style={styles.slideUpSubtitle}>Достопримечательность</Text>
+                                <View style={{flexDirection:"row", justifyContent: "space-between"}}>
+                                    <View>
+                                        <Text style={styles.slideUpTitle}>Улица Баумана</Text>
+                                        <Text style={styles.slideUpSubtitle}>Достопримечательность</Text>
+                                    </View>
+
+                                    <CloseButton onPress={close}/>
+                                </View>
+
                                 <View style={styles.article}>
                                     <Text style={styles.articleTitle}>История</Text>
                                     <Text style={styles.articleText}>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet cupiditate et iusto praesentium quaerat ullam voluptates. Blanditiis culpa dicta eos, error maiores quia quis quod sed similique sint. Aspernatur blanditiis deleniti eligendi, iste laboriosam nemo neque nostrum praesentium sint voluptates. A animi aperiam aspernatur beatae dicta distinctio dolore eligendi eum in laboriosam libero minima minus nam optio perferendis quia quidem quis recusandae repellendus, sed similique sit totam voluptate! A aspernatur, corporis cumque dolorem doloremque eos et fugit ipsum iste iure nemo quas rerum sapiente sed, ullam. Ad asperiores dolore eaque earum enim nostrum odio odit officiis pariatur quam. Aspernatur atque commodi doloremque impedit magnam placeat quam similique tempore, vitae. Animi architecto at beatae dignissimos eum ex facere id in iste iusto laborum libero minima modi nam nulla numquam optio praesentium quibusdam rem repellat temporibus tenetur, ullam ut velit vitae voluptas voluptatum? Ab minima minus quos sunt ut! Error expedita fugit quasi rerum voluptas! Eos eum eveniet laudantium magni natus quaerat quisquam, rerum similique voluptatem voluptatum? Dolore eligendi iure laudantium nam repudiandae. Animi assumenda beatae dolores doloribus ea eligendi, eos eum exercitationem facere impedit labore necessitatibus neque nisi officia omnis quaerat, rem saepe soluta. Et, harum itaque non omnis praesentium voluptate?</Text>
@@ -46,10 +68,10 @@ const BottomSlideUp = ({navigation}) => {
                                 </MapView>
                             </View>
                         </ScrollView>
-                <ContentContainer>
+                <ContentContainer style={{backgroundColor: "white",paddingTop: 20}}>
                     <CustomButton style={{marginBottom: 20}} onPress={()=>navigation.navigate("ar_scene")} text={"Собрать"}/>
                 </ContentContainer>
-            </View>
+            </Animated.View>
 
     );
 };
@@ -87,11 +109,11 @@ const styles = StyleSheet.create({
 
     slideUpBody:{
         width:"100%",
-        height:"50%",
+        height:"70%",
         position:"absolute",
         paddingTop:18,
+        bottom:-100,
         zIndex:1000,
-        bottom:0,
         backgroundColor:'white',
     },
 

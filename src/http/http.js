@@ -5,11 +5,11 @@ import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const $authHost = axios.create({
-    baseURL:"http://192.168.43.105:8000"
+    baseURL:"http://217.25.88.110:8000"
 })
 
 const $host = axios.create({
-    baseURL:"http://192.168.43.105:8000"
+    baseURL:"http://217.25.88.110:8000"
 })
 
 $authHost.interceptors.request.use(async (config)=>{
