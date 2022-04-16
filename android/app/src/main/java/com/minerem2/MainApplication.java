@@ -1,5 +1,7 @@
 package com.minerem2;
 
+import com.facebook.react.bridge.JSIModulePackage; // <- add
+import com.swmansion.reanimated.ReanimatedJSIModulePackage; // <- add
 import com.viromedia.bridge.ReactViroPackage;
 import android.app.Application;
 import android.content.Context;
@@ -26,6 +28,11 @@ public class MainApplication extends Application implements ReactApplication {
         public boolean getUseDeveloperSupport() {
           return BuildConfig.DEBUG;
         }
+
+         @Override
+         protected JSIModulePackage getJSIModulePackage() {
+                 return new ReanimatedJSIModulePackage();
+                  }
 
         @Override
         protected List<ReactPackage> getPackages() {
