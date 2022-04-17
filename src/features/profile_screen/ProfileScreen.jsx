@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import ContentView from "../../components/content_view/ContentView";
-import {Dimensions, Image, ScrollView, StyleSheet, Text, View} from "react-native";
+import {Alert, Dimensions, Image, ScrollView, StyleSheet, Text, View} from "react-native";
 import BottomNavigation from "../../components/bottom_navigation/BottomNavigation";
 import ContentContainer from "../../components/content_container/ContentContainer";
 import CustomButton from "../../components/custom_button/CustomButton";
 import Avatar from "../../assets/images/Avatar.png"
 import RewardCard from "../../components/reward_card/RewardCard";
 import {useDispatch, useSelector} from "react-redux";
-import {getUser} from "../../store/actions/UserActions";
+import {getUser, logoutUser, saveUserData} from "../../store/actions/UserActions";
 import CustomInput from "../../components/custom_input/CustomInput";
 
 const width = Dimensions.get("window").width-20
@@ -18,13 +18,23 @@ const ProfileScreen = ({navigation}) => {
     const [ethWallet, setEthWallet] = useState("")
     const [cards,setCards] = useState([])
     const [profileRedact, setProfileRedact] = useState(false)
-    const fetch = async()=>{
+    const fetch = useCallback(async()=>{
         const data = await dispatch(getUser())
         data.data && setCards(data.data)
-    }
-    const upload = async ()=>{
+    }, [dispatch])
+    const upload = useCallback(async ()=>{
+        try {
+            await dispatch(saveUserData({ethereum_wallet:ethWallet}))
+            Alert.alert('Данные созранены')
+        }catch (e) {
 
-    }
+        }
+    },[ethWallet])
+
+    const logout =useCallback(async ()=>{
+        await dispatch(logoutUser())
+        navigation.navigate("home")
+    }, [dispatch])
     useEffect(()=>{fetch()},[fetch])
     return (
         <ContentView style={styles.profileWrapper}>
@@ -40,8 +50,8 @@ const ProfileScreen = ({navigation}) => {
                     {profileRedact && <View style={{marginTop:20}}>
                         <CustomInput onChangeText={val=>setEthWallet(val)} placeholder={"Eth wallet"}/>
                         <View style={{marginTop:20}}>
-                            <CustomButton text={"Сохранить"}/>
-                            <CustomButton white={true} text={"Выйти из аккаунта"}/>
+                            <CustomButton onPress={upload} text={"Сохранить"}/>
+                            <CustomButton onPress={logout} white={true} text={"Выйти из аккаунта"}/>
                         </View>
                     </View>}
                     <View style={styles.inventoryWrapper}>

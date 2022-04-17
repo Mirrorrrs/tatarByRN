@@ -4,7 +4,7 @@ import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from
 
 const models = {
     itpark:{
-        source:require('../../assets/3dObjects/itpark/эчпоч.obj'),
+        source:require('../../assets/icons/Echpok.png'),
     }
 }
 

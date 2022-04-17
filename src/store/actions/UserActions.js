@@ -90,7 +90,23 @@ export const addCardToCollection = (props)=> async(dispatch)=>{
 
 export const saveUserData = (props)=> async(dispatch)=>{
     try{
-        const data = await $authHost.post(`/api/items/${props.id}/mint`)
+        const data = await $authHost.post(`/api/profile`,props)
+    }catch (e) {
+
+    }
+}
+
+export const logoutUser = (props)=> async(dispatch)=>{
+    try{
+       await AsyncStorage.removeItem("token")
+        dispatch({
+            type:SET_TOKEN,
+            payload:null
+        })
+        dispatch({
+            type:SET_LOGIN,
+            payload:""
+        })
     }catch (e) {
 
     }

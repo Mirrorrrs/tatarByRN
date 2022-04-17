@@ -10,11 +10,15 @@ import {
 } from '@viro-community/react-viro';
 import {Alert, Image, StyleSheet, Text, View} from "react-native";
 import ContentView from "../../components/content_view/ContentView";
-import InfoIcon from "../../assets/icons/InfoIcon";
 import {InfoButton, MapButton} from "../../components/circled_button/CircledButton";
 import BottomSlideUp from "../../components/bottom_slideup/BottomSlideUp";
 import {useDispatch} from "react-redux";
 import {addCardToCollection} from "../../store/actions/UserActions";
+
+import Obj from '../../assets/3dObjects/itpark/эчпоч.obj'
+
+import Mtl from "../../assets/3dObjects/itpark/эчпоч.mtl"
+
 
 ViroAnimations.registerAnimations({
     loopRotate: {
@@ -30,9 +34,9 @@ ViroAnimations.registerAnimations({
 
 const models = {
     itpark:{
-        source:require('../../assets/3dObjects/itpark/эчпоч.obj'),
+        source: Obj,
         type:"OBJ",
-        resources:[require("../../assets/3dObjects/itpark/эчпоч.mtl")],
+        resources:[Mtl],
         scale:[.8, .8, .8]
     }
 }
