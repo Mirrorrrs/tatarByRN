@@ -3,6 +3,7 @@ import {StyleSheet, TouchableOpacity} from "react-native";
 import Cross from "../../assets/icons/Cross";
 import MapIcon from "../../assets/icons/MapIcon";
 import UserPosition from "../../assets/icons/UserPosition";
+import InfoIcon from "../../assets/icons/InfoIcon";
 
 export const CircledButton = ({style, children, onPress}) => {
     return (
@@ -24,5 +25,6 @@ const styles = StyleSheet.create({
 })
 
 export const CloseButton = ({onPress})=><CircledButton onPress={onPress} style={{backgroundColor:"rgba(0,196,140,0.2)"}}><Cross fill={"#00C48C"}/></CircledButton>
-export const MapButton = ()=><CircledButton><MapIcon fill={"#00C48C"}/></CircledButton>
+export const InfoButton = ({onPress})=><CircledButton onPress={onPress} style={{backgroundColor:"rgba(0,196,140,0.2)"}}><InfoIcon fill={"#00C48C"}/></CircledButton>
+export const MapButton = ({onPress, style})=><CircledButton style={style} onPress={onPress}><MapIcon fill={"#00C48C"}/></CircledButton>
 export const LocateButton = ({onPress, style})=><CircledButton style={[{backgroundColor:"#00C48C" },style]} onPress={onPress}><UserPosition fill={"white"}/></CircledButton>

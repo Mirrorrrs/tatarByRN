@@ -12,7 +12,7 @@ import {getPicks} from "../../store/actions/UserActions";
 const height = -Math.floor(Dimensions.get("window").height)
 
 
-const BottomSlideUp = ({navigation, opened, close, currentObject, showButton}) => {
+const BottomSlideUp = ({navigation, opened, close, currentObject, showButton, showText=true}) => {
     const bottomPosition = useSharedValue(height)
     const dispatch = useDispatch()
     const animatedStyles = useAnimatedStyle(()=>{
@@ -53,7 +53,7 @@ const BottomSlideUp = ({navigation, opened, close, currentObject, showButton}) =
                     {showButton ?
                         <CustomButton style={{marginBottom: 20}} onPress={()=>navigation.navigate("ar_scene",{
                             currentObject:currentObject
-                        })} text={"Собрать"}/>: <Text style={{textAlign:"center", marginBottom:20}}>Вы должны находиться в радиусе 150м от объекта</Text>}
+                        })} text={"Собрать"}/>: showText && <Text style={{textAlign:"center", marginBottom:20}}>Вы должны находиться в радиусе 150м от объекта</Text>}
                 </ContentContainer>
 
             </Animated.View>

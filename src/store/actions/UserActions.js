@@ -1,4 +1,4 @@
-import {SET_FIRST_VISIT, SET_TOKEN, SET_USER_REGION} from "../consts";
+import {SET_FIRST_VISIT, SET_LOGIN, SET_TOKEN, SET_USER_REGION} from "../consts";
 import {$authHost, $host} from "../../http/http";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -45,8 +45,14 @@ export const registerUser = (props)=> async (dispatch)=>{
 
 export const getUser = ()=>async(dispatch)=>{
     try{
-        const data = await $authHost.get("/api/profile")
-        console.log(data);
+        let data = await $authHost.get("/api/profile")
+        dispatch({
+            type:SET_LOGIN,
+            payload:data.data.username
+        })
+         data = await $authHost.get("/api/profile/items")
+        return data.data
+
     }catch (e) {
         console.log(e);
     }
@@ -72,5 +78,20 @@ export const getPicks = (props) => async (dispatch)=>{
         return data.data.data
     }catch (e){
         throw e
+    }
+}
+export const addCardToCollection = (props)=> async(dispatch)=>{
+    try{
+        const data = await $authHost.post(`/api/items/${props.id}/mint`)
+    }catch (e) {
+
+    }
+}
+
+export const saveUserData = (props)=> async(dispatch)=>{
+    try{
+        const data = await $authHost.post(`/api/items/${props.id}/mint`)
+    }catch (e) {
+
     }
 }

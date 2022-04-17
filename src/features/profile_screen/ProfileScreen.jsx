@@ -6,18 +6,26 @@ import ContentContainer from "../../components/content_container/ContentContaine
 import CustomButton from "../../components/custom_button/CustomButton";
 import Avatar from "../../assets/images/Avatar.png"
 import RewardCard from "../../components/reward_card/RewardCard";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getUser} from "../../store/actions/UserActions";
+import CustomInput from "../../components/custom_input/CustomInput";
 
 const width = Dimensions.get("window").width-20
 
 const ProfileScreen = ({navigation}) => {
     const dispatch = useDispatch()
-    const [test,setTest] = useState(6)
+    const username = useSelector(state=>state.user.login)
+    const [ethWallet, setEthWallet] = useState("")
+    const [cards,setCards] = useState([])
+    const [profileRedact, setProfileRedact] = useState(false)
     const fetch = async()=>{
-        await dispatch(getUser())
+        const data = await dispatch(getUser())
+        data.data && setCards(data.data)
     }
-    useEffect(fetch,[fetch])
+    const upload = async ()=>{
+
+    }
+    useEffect(()=>{fetch()},[fetch])
     return (
         <ContentView style={styles.profileWrapper}>
             <ScrollView>
@@ -25,21 +33,24 @@ const ProfileScreen = ({navigation}) => {
                     <View style={styles.profileHeader}>
                         <Image source={Avatar}/>
                         <View>
-                            <Text style={styles.profileName}>Настоящий поц</Text>
+                            <Text style={styles.profileName}>{username}</Text>
                         </View>
                     </View>
-                    <CustomButton text={"Редактировать профиль"} white={true} style={{borderWidth:2, borderColor:"#00C48C", marginTop:20}}/>
+                    <CustomButton onPress={()=>setProfileRedact(state=>!state)} text={"Редактировать профиль"} white={true} style={{borderWidth:2, borderColor:"#00C48C", marginTop:20}}/>
+                    {profileRedact && <View style={{marginTop:20}}>
+                        <CustomInput onChangeText={val=>setEthWallet(val)} placeholder={"Eth wallet"}/>
+                        <View style={{marginTop:20}}>
+                            <CustomButton text={"Сохранить"}/>
+                            <CustomButton white={true} text={"Выйти из аккаунта"}/>
+                        </View>
+                    </View>}
                     <View style={styles.inventoryWrapper}>
                         <Text style={styles.inventoryTitle}>Мой инвентарь</Text>
                         <View style={styles.rewards}>
-                            <RewardCard style={styles.rewardCard} image={require("../../assets/images/Reward.png")}/>
-                            <RewardCard style={styles.rewardCard} image={require("../../assets/images/Reward.png")}/>
-                            <RewardCard style={styles.rewardCard} image={require("../../assets/images/Reward.png")}/>
-                            <RewardCard style={styles.rewardCard} image={require("../../assets/images/Reward.png")}/>
-                            <RewardCard style={styles.rewardCard} image={require("../../assets/images/Reward.png")}/>
-                            <RewardCard style={styles.rewardCard} image={require("../../assets/images/Reward.png")}/>
-                            <RewardCard style={styles.rewardCard} image={require("../../assets/images/Reward.png")}/>
-                            <RewardCard style={styles.rewardCard} image={require("../../assets/images/Reward.png")}/>
+                            {cards.map(el=>{
+                                return   <RewardCard model={el.model} style={styles.rewardCard} image={el.image_url}/>
+
+                            })}
                         </View>
 
                     </View>

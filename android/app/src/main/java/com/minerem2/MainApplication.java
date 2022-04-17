@@ -1,7 +1,8 @@
 package com.minerem2;
 
 import com.facebook.react.bridge.JSIModulePackage;
-import com.swmansion.reanimated.ReanimatedJSIModulePackage; 
+import com.swmansion.reanimated.ReanimatedJSIModulePackage;
+
 import com.viromedia.bridge.ReactViroPackage;
 import android.app.Application;
 import android.content.Context;

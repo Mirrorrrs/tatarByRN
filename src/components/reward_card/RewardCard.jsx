@@ -2,7 +2,13 @@ import React, {useEffect} from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from "react-native";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
 
-const RewardCard = ({image, style}) => {
+const models = {
+    itpark:{
+        source:require('../../assets/3dObjects/itpark/эчпоч.obj'),
+    }
+}
+
+const RewardCard = ({image, style, model}) => {
     const scale = useSharedValue(1.5)
     const borderRadius = useSharedValue(14)
 
@@ -19,7 +25,7 @@ const RewardCard = ({image, style}) => {
     },[])
     return (
         <Animated.View style={[styles.cardBody, style, animatedStyle]}>
-            <Image source={image}/>
+            <Image style={{width:"100%", height:"50%"}} source={models[model].source}/>
         </Animated.View>
     );
 };
