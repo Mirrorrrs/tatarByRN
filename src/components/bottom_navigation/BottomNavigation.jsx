@@ -17,7 +17,7 @@ const BottomNavigation = ({navigation}) => {
                 <Map fill={routeName==="home" ? "#00C48C" : "#858585"}/>
                 <Text style={[styles.innerText, routeName==="home" && styles.innerTextActive]}>Гулять</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuInner} onPress={()=>navigation.navigate("map")}>
+            <TouchableOpacity style={styles.menuInner} onPress={()=>{token===null?navigation.navigate("auth"):navigation.navigate("map")}}>
                 <Point fill={routeName==="map" ? "#00C48C" : "#858585"}/>
                 <Text style={[styles.innerText, routeName==="map" && styles.innerTextActive]}>Места</Text>
             </TouchableOpacity>

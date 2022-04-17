@@ -13,7 +13,7 @@ import {View} from "react-native";
 ViroAnimations.registerAnimations({
     loopRotate: {
         properties: {
-            rotateY: '+=90'
+            rotateY: '+=45'
         },
         duration: 600
     },
@@ -21,12 +21,16 @@ ViroAnimations.registerAnimations({
 
 const models = {
     itpark:{
-
+        source:require('../../assets/3dObjects/itpark/эчпоч.obj'),
+        type:"OBJ",
+        resources:[require("../../assets/3dObjects/itpark/эчпоч.mtl")],
+        scale:[.8, .8, .8]
     }
 }
 
 const ArSceneScreen = ({navigation,route})=>{
     const {currentObject} = route.params;
+    const currentModel = models[currentObject.model]
     const rotateAnimation = {name: 'loopRotate', run: true, loop: true}
     return (
         <ViroARScene >
@@ -43,7 +47,7 @@ const ArSceneScreen = ({navigation,route})=>{
                     innerAngle={5}
                     outerAngle={45}
                     direction={[0,-1,-.2]}
-                    position={[0, 3, 0]}
+                    position={[0, 0, 0]}
                     color="#ffffff"
                     castsShadow={true}
                     influenceBitMask={2}
@@ -52,15 +56,16 @@ const ArSceneScreen = ({navigation,route})=>{
                     shadowFarZ={5}
                     shadowOpacity={.7} />
                         <Viro3DObject
-                            source={require('../../assets/3dObjects/muslim/muslim.obj')}
-                            position={[0, 0, .1]}
-                            scale={[.02, .02, .02]}
-                            type="OBJ"
+                            source={currentModel.source}
+                            position={[0, -1, -2]}
+                            scale={currentModel.scale}
+                            type={currentModel.type}
+                            rotation={[30,0,0]}
                             animation={rotateAnimation}
                             lightReceivingBitMask={3}
                             shadowCastingBitMask={2}
                             transformBehaviors={[]}
-                            resources={[require('../../assets/3dObjects/muslim/muslim.mtl')]}/>
+                            resources={currentModel.resources}/>
 
                 <ViroQuad
                     rotation={[-90,0,0]}

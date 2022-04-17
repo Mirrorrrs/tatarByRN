@@ -54,7 +54,7 @@ const HomeScreen = ({navigation}) => {
                 <Animated.ScrollView showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false} horizontal={true} style={[styles.cardsWrapper,walkStyle]}>
                     <HomeToCard style={styles.homeToCardStyle}/>
-                    <HomeToCard style={styles.homeToCardStyle}/>
+                    <HomeToCard style={[styles.homeToCardStyle, {backgroundColor:"#6979F8"}]}/>
                     <HomeToCard style={styles.homeToCardStyle}/>
                     <HomeToCard style={styles.homeToCardStyle}/>
                     <HomeToCard style={styles.homeToCardStyle}/>
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
         color:"#1A051D",
         fontFamily:"SFProDisplay-Bold",
         fontSize:22,
-        marginTop: 15
+        marginTop: 40
     },
 
     pageSubtitle:{
