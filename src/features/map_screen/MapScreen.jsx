@@ -1,5 +1,5 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {View, StyleSheet, Text} from "react-native";
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {View, StyleSheet, Text, Alert} from "react-native";
 import ContentView from "../../components/content_view/ContentView";
 import BottomNavigation from "../../components/bottom_navigation/BottomNavigation";
 import MapView, {Marker} from 'react-native-maps';
@@ -8,13 +8,32 @@ import BottomSlideUp from "../../components/bottom_slideup/BottomSlideUp";
 import Geolocation from '@react-native-community/geolocation';
 import UserPosition from "../../assets/icons/UserPosition";
 import {LocateButton} from "../../components/circled_button/CircledButton";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {getPicks} from "../../store/actions/UserActions";
+
+function measure(lat1, lon1, lat2, lon2){
+    let R = 6378.137; // Radius of earth in KM
+    let dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
+    let dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180;
+    let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    let d = R * c;
+    return d * 1000; // meters
+}
 
 const MapScreen = ({navigation}) => {
     const [bottomSlideOpened, setBottomSlideOpened] = useState(false)
     const userRegion = useSelector(state=>state.user.userRegion)
+    const [bottomTitle, setBottomTitle] = useState("")
+    const [currentCords, setCurrentCords] = useState([])
+    const [currentObject, setCurrentObject] = useState({})
     const mapRef= useRef(null)
     const [geolocation, setGeolocation] = React.useState(userRegion);
+    const [picks, setPicks] = useState([])
+    const dispatch = useDispatch()
+
 
     const locateMap = (loc, zoom=15)=>{
         if (mapRef.current) {
@@ -25,11 +44,27 @@ const MapScreen = ({navigation}) => {
                 pitch: 0,
                 altitude: 5
             }
-
             mapRef.current.animateCamera(newCamera, { duration: 1000 });
-
         }
     }
+
+    const fetch = async ()=>{
+        try{
+            const data = await dispatch(getPicks())
+            setPicks(data)
+        }catch (e) {
+            Alert.alert("Ошибка сервера")
+        }
+    }
+
+    const showSlideUpButton = useMemo(()=>{
+        return (measure(geolocation.latitude, geolocation.longitude, currentCords[0], currentCords[1])<300)
+    },[currentCords])
+
+    useEffect(()=>{
+        fetch()
+    },[fetch])
+
 
     useEffect(()=>{
         locateMap(userRegion,10)
@@ -68,9 +103,32 @@ const MapScreen = ({navigation}) => {
                     description={"text"}
                     onPress={()=>{
                         setBottomSlideOpened(true)
+                        setBottomTitle()
                     }
                     }
                 />
+
+                {picks && picks.map(el=>{
+                    return  <Marker
+                        coordinate={{
+                            latitude: parseFloat(el.latitude),
+                            longitude: parseFloat(el.longitude),
+                            latitudeDelta: 0,
+                            longitudeDelta:  0,
+                        }}
+                        showsUserLocation={true}
+                        title={el.name}
+                        image={require("../../assets/icons/PickPoint.png")}
+                        onPress={()=>{
+                            setBottomSlideOpened(true)
+                            setCurrentObject(el)
+                            setCurrentCords([parseFloat(el.latitude),parseFloat(el.longitude)])
+                        }
+                        }
+                    />
+
+                })}
+
 
                 <Marker title={"Ваша позиция"} coordinate={{latitude:geolocation.latitude, longitude:geolocation.longitude}} flat anchor={{ x: 0.5, y: 0.5 }}>
                     <UserPosition fill={"red"}/>
@@ -78,7 +136,7 @@ const MapScreen = ({navigation}) => {
             </MapView>
         </View>
         <BottomNavigation navigation={navigation}/>
-        <BottomSlideUp opened={bottomSlideOpened} close={()=>setBottomSlideOpened(false)} navigation={navigation}/>
+        <BottomSlideUp showButton={showSlideUpButton} currentObject={currentObject} opened={bottomSlideOpened} close={()=>setBottomSlideOpened(false)} navigation={navigation}/>
     </ContentView>;
 };
 

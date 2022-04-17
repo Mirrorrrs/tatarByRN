@@ -65,3 +65,12 @@ export const setUserRegion = (props) => (dispatch)=>{
         payload:props
     })
 }
+
+export const getPicks = (props) => async (dispatch)=>{
+    try {
+        const data = await $authHost.get("/api/items")
+        return data.data.data
+    }catch (e){
+        throw e
+    }
+}

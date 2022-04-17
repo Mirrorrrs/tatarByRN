@@ -26,6 +26,8 @@ target 'MinErem2' do
 
   pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
 
+  pod 'TextToSpeech', :path => '../node_modules/react-native-tts'
+
   target 'MinErem2Tests' do
     inherit! :complete
     # Pods for testing

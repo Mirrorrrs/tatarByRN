@@ -19,7 +19,14 @@ ViroAnimations.registerAnimations({
     },
 });
 
-const ArSceneScreen = ()=>{
+const models = {
+    itpark:{
+
+    }
+}
+
+const ArSceneScreen = ({navigation,route})=>{
+    const {currentObject} = route.params;
     const rotateAnimation = {name: 'loopRotate', run: true, loop: true}
     return (
         <ViroARScene >
@@ -67,6 +74,6 @@ const ArSceneScreen = ()=>{
 )
 }
 
-export default ()=>{
-    return (<View style={{flex:1}}><ViroARSceneNavigator  initialScene={{scene:ArSceneScreen}} style={{flex:1}}/></View>)
+export default ({navigation, route})=>{
+    return (<View style={{flex:1}}><ViroARSceneNavigator initialScene={{scene:ArSceneScreen.bind(this,{navigation, route})}} style={{flex:1}}/></View>)
 }
