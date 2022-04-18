@@ -15,9 +15,7 @@ import BottomSlideUp from "../../components/bottom_slideup/BottomSlideUp";
 import {useDispatch} from "react-redux";
 import {addCardToCollection} from "../../store/actions/UserActions";
 
-import Obj from '../../assets/3dObjects/itpark/эчпоч.obj'
 
-import Mtl from "../../assets/3dObjects/itpark/эчпоч.mtl"
 
 
 ViroAnimations.registerAnimations({
@@ -34,9 +32,9 @@ ViroAnimations.registerAnimations({
 
 const models = {
     itpark:{
-        source: Obj,
+        source: require("../../assets/3dObjects/itpark/Ech.obj"),
         type:"OBJ",
-        resources:[Mtl],
+        resources:[require("../../assets/3dObjects/itpark/MtlEch.mtl")],
         scale:[.8, .8, .8]
     }
 }
